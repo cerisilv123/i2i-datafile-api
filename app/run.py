@@ -63,7 +63,7 @@ def run():
         # 5) Calling function to retrieve invoice masters (THIS WILL NEED TO BE CHANGED TO ONLY GET APPROVED invoices by Cyclops (Lee))
         is_new_file = True
         now = datetime.now()
-        datetime_string = now.strftime("%d-%m-%Y %H.%M.%S")
+        datetime_string = now.strftime("%d-%m-%Y-%H.%M.%S")
         filename = f"{datetime_string}i2i-cyclops-datafile-invoices"
         
         invoices = get_so_inv_masters_approved(session, SOInvMaster)
