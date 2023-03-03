@@ -8,8 +8,22 @@ from dotenv import load_dotenv
 
 from app.services.connection_services import create_connection, create_connection_cursor
 from app.services.i2i_services import insert_invoices_paid_transactions_from_datafile, get_transaction_data_new_ids, insert_payment_transaction, insert_invoices_sent_to_datafile_row, get_transaction_data_by_type, get_tax_code, database_table_exists, create_database_table, get_so_inv_masters_approved, get_so_inv_details, get_customer_by_so_num, has_invoice_already_been_sent_to_datafile
-from app.services.helper_services import append_to_csv, post_file_to_ftp_server
+from app.services.helper_services import append_to_csv
 from app.models.i2i_daos import QIPM, Payments, Currencies, InvoicesSentToDatafile, InvoicesPaidTransactionsFromDatafile, SOInvMaster, SOInvDetail, SoMaster, CCCust, CYCSLA, CYCSLT
+
+def update_table_tblInvoicesSentToDatafile(csv_file, session):
+    # 7.1) Updating tblInvoicesSentToDatafile with invoices that have been posted
+    for index, row in csv_file.iterrows():
+        if row['Type'] == 1:
+            invoice_number_string = str(row['InvoiceNumber'])
+            invoice_number_string = f"{invoice_number_string:>08}"
+            insert_invoices_sent_to_datafile_row(session, InvoicesSentToDatafile, invoice_number_string)
+            
+def delete_file_from_directory(filename):
+    # 8) Deleting file from directory now it is posted
+    working_directory = os.getcwd()
+    path_csv = f"{working_directory}/files" 
+    os.remove(f"{path_csv}/{filename}.csv")
 
 def run(): 
     
@@ -91,30 +105,25 @@ def run():
                 
                 # 7) Calling Function to post file to FTP server
                 #post_file_to_ftp_server(filename, os.getenv('FTP_IP'), os.getenv('FTP_USERNAME'), os.getenv('FTP_PASSWORD'))
-                logger.info("7) Posted CSV file to FTP Server")
-                
-                # 7.1) Updating tblInvoicesSentToDatafile with invoices that have been posted
-                for index, row in csv_file.iterrows():
-                    if row['Type'] == 1:
-                        invoice_number_string = str(row['InvoiceNumber'])
-                        invoice_number_string = f"{invoice_number_string:>08}"
-                        insert_invoices_sent_to_datafile_row(session, InvoicesSentToDatafile, invoice_number_string)
-                        
-                # 8) Deleting file from directory now it is posted
-                working_directory = os.getcwd()
-                path_csv = f"{working_directory}/files" 
-                #path_excel = f"{working_directory}/files"
-                os.remove(f"{path_csv}/{filename}.csv")
-                #os.remove(f"{path_excel}/{filename}.xlsx")
-                logger.info("8) Posted CSV file to FTP Server")
+                #logger.info("7) Posted CSV file to FTP Server")
+                        # 11) Clearing Database connection
+                conn.close()
+                logger.info("11) Successfully cleared database connections.")
+                return csv_file, session, filename
 
             except FileNotFoundError:
                 print("File not found, no data to sync.")
+                conn.close()
+                logger.info("11) Successfully cleared database connections.")
+                return None, session, filename
             except pd.errors.ParserError:
                 print("File is not a valid CSV format.")
+                conn.close()
+                logger.info("11) Successfully cleared database connections.")
+                return None, session, filename
             except: 
                 print("No file to post.")
-        
-        # 11) Clearing Database connection
-        conn.close()
-        logger.info("11) Successfully cleared database connections.")
+                conn.close()
+                logger.info("11) Successfully cleared database connections.")
+                return None, session, filename
+                
