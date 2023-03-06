@@ -3,9 +3,6 @@ import logging
 import pandas as pd
 import time
 
-from datetime import datetime
-from dotenv import load_dotenv
-
 from app.services.connection_services import create_connection, create_connection_cursor
 from app.services.i2i_services import insert_invoices_paid_transactions_from_datafile, get_transaction_data_new_ids, insert_payment_transaction, insert_invoices_sent_to_datafile_row, get_transaction_data_by_type, get_tax_code, database_table_exists, create_database_table, get_so_inv_masters_approved, get_so_inv_details, get_customer_by_so_num, has_invoice_already_been_sent_to_datafile
 from app.services.helper_services import append_to_csv
@@ -29,10 +26,6 @@ def run():
     
         logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
         logger = logging.getLogger()
-
-        # 1) Loading envars from .env
-        load_dotenv()
-        logger.info("1) Envars loaded successfully")
         
         # 2) Creating connection to Cyclops i2i DB (SQL Alchemy ORM) & i2i DB via pyodbc. SQL allchemy is used for reading. pyodbc is used for writing
         engine, session = create_connection()

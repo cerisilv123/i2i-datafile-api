@@ -2,9 +2,15 @@ import secrets
 from flask import Flask, request, jsonify, send_file
 import os
 
+from datetime import datetime
+from dotenv import load_dotenv
+
 from app.run import run, update_table_tblInvoicesSentToDatafile, delete_file_from_directory
 
 def create_app():
+    # 1) Loading envars from .env
+    load_dotenv()
+    
     # Creating Flask app
     app = Flask(__name__)
     
