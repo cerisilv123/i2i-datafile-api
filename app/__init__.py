@@ -22,8 +22,6 @@ def create_app():
         headers = request.headers
         auth = headers.get('Api-Key')
         
-        print(headers)
-        
         # Checking if user making GET request has provided API key 
         if auth == os.getenv('API_KEY'):
             
