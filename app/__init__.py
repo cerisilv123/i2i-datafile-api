@@ -20,9 +20,8 @@ def create_app():
         
         # Getting header data to check for API Key
         headers = request.headers
-        auth = headers.get("X-Api-Key")
+        auth = headers.get('Api-Key')
         
-        print(auth)
         print(headers)
         
         # Checking if user making GET request has provided API key 
