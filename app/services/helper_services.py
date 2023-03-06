@@ -86,7 +86,8 @@ def append_to_csv(invoice_master, invoice_details, filename, is_new_file, custom
             print("No values in column - nonetype")
             
         # Opening file and writing to file
-        logger.info(f"5.4) Current working directory is {os.getcwd()}") 
+        logger.info(f"5.4) Current working directory is: {os.getcwd()}") 
+        logger.info(f"5.4) List working directory: {os.listdir()}") 
         
         with open(f"files/{filename}", 'a', newline='') as csvfile:
             csvwriter = csv.writer(csvfile)
