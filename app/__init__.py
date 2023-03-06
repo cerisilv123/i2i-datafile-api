@@ -30,9 +30,12 @@ def create_app():
             
             # Checking if CSV file exists and there was Data
             if csv_file is not None: 
-                file_path = os.path.join(os.getcwd(), 'files', f'{filename}.csv')
-                update_table_tblInvoicesSentToDatafile(csv_file, session)
-                return send_file(file_path, as_attachment=True)
+                try: 
+                    file_path = os.path.join(os.getcwd(), 'files', f'{filename}.csv')
+                    update_table_tblInvoicesSentToDatafile(csv_file, session)
+                    return send_file(file_path, as_attachment=True)
+                except: 
+                    return jsonify({"message": "ERROR: Unable to create file "}), 401
             else: 
                 return jsonify({"message": "NO DATA: No new file data to retreive"})
         else:
