@@ -80,7 +80,7 @@ def run():
                             logger.info("5.3) Retrieving invoice details from i2i")
                             # 5.4) Appending to CSV File
                             tax_code = get_tax_code(datafile_session, customer.CustAcctNo, CYCSLA)
-                            append_to_csv(invoice_master, invoice_details, f"{filename}.csv", is_new_file, customer, tax_code, QIPM, session)
+                            append_to_csv(invoice_master, invoice_details, f"{filename}.csv", is_new_file, customer, tax_code, QIPM, session, logger)
                             is_new_file = False
                             logger.info("5.4) Calling function to append invoice details to CSV")
                         else: 

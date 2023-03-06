@@ -2,7 +2,6 @@ import secrets
 from flask import Flask, request, jsonify, send_file
 import os
 
-from datetime import datetime
 from dotenv import load_dotenv
 
 from app.run import run, update_table_tblInvoicesSentToDatafile, delete_file_from_directory

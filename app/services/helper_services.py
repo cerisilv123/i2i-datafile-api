@@ -9,7 +9,7 @@ from collections import Counter
 
 logger = logging.getLogger()
 
-def append_to_csv(invoice_master, invoice_details, filename, is_new_file, customer, tax_code, QIPM, session):
+def append_to_csv(invoice_master, invoice_details, filename, is_new_file, customer, tax_code, QIPM, session, logger):
     try: 
         # Creating CSV fields
         fields = ['Type', 'InvoiceDate', 'CustAccount', 'InvoiceNumber', 'CustomerName', 'CyclopsRef', 
@@ -86,7 +86,7 @@ def append_to_csv(invoice_master, invoice_details, filename, is_new_file, custom
             print("No values in column - nonetype")
             
         # Opening file and writing to file
-        print(os.getcwd())
+        logger.info(f"5.4) Current working directory is {os.getcwd()}") 
         
         with open(f"files/{filename}", 'a', newline='') as csvfile:
             csvwriter = csv.writer(csvfile)
