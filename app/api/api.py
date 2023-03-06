@@ -1,10 +1,15 @@
 import secrets
-from flask import Flask, request, jsonify, send_file, Blueprint
+from flask import Flask, request, jsonify, send_file, Blueprint, after_this_request
 import os
+import time
+import logging
 
 from dotenv import load_dotenv
 
 from app.run import run, update_table_tblInvoicesSentToDatafile, delete_file_from_directory
+
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+logger = logging.getLogger()
 
 api = Blueprint('api', __name__)
 
@@ -27,6 +32,17 @@ def file():
             try: 
                 file_path = os.path.join(os.getcwd(), 'files', f'{filename}.csv')
                 update_table_tblInvoicesSentToDatafile(csv_file, session)
+                
+                # Registering a function to delete file after response is made using after_this_request decorator
+                @after_this_request
+                def delete_file(response):
+                    try: 
+                        os.remove(file_path)
+                    except: 
+                        logger.info("ERROR) Couldn't delete file after request")
+                    return response
+                        
+                # Return file 
                 return send_file(file_path, as_attachment=True)
             except: 
                 return jsonify({"message": "ERROR: Unable to create file "}), 401
