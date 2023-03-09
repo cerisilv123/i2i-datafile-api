@@ -88,19 +88,12 @@ def run():
                     else: 
                         logger.info("5.2) Could not get customer details ")
 
-            # 6) Converting CSV to excel to have both formats
+            # 6) Getting CSV
             try: 
                 csv_file = pd.read_csv(f"files/{filename}.csv")
-                #excel_file = pd.ExcelWriter(f"files/{filename}.xlsx")
-                #csv_file.to_excel(excel_file, index=False)
-                #excel_file.save()
-                #excel_file.close()
                 logger.info("6) Converted CSV to excel to have both formats")
                 
-                # 7) Calling Function to post file to FTP server
-                #post_file_to_ftp_server(filename, os.getenv('FTP_IP'), os.getenv('FTP_USERNAME'), os.getenv('FTP_PASSWORD'))
-                #logger.info("7) Posted CSV file to FTP Server")
-                        # 11) Clearing Database connection
+                # 11) Clearing Database connection
                 conn.close()
                 logger.info("11) Successfully cleared database connections.")
                 return csv_file, session, filename
