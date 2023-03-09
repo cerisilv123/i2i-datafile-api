@@ -38,7 +38,7 @@ def create_database_table(session, db_model):
         
 def get_so_inv_masters_approved(session, SOInvMaster):
     try:
-        rows = session.query(SOInvMaster).filter(SOInvMaster.InvApprove == 1).all()
+        rows = session.query(SOInvMaster).filter(SOInvMaster.InvApprove == -1).all()
         if rows is None: 
             return None
         else:
